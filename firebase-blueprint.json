@@ -1,0 +1,245 @@
+{
+  "entities": {
+    "DailyAssessment": {
+      "title": "DailyAssessment",
+      "description": "Daily configurable BPO screening assessment, YouTube Shorts video link, and random IQ reflection prompts managed by HR.",
+      "type": "object",
+      "properties": {
+        "activeDate": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Active assessment date in YYYY-MM-DD format"
+        },
+        "welcomeTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Welcome title shown to candidates"
+        },
+        "tagline": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Brand tagline shown beneath welcome title"
+        },
+        "channelUrl": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 300,
+          "description": "YouTube channel URL for subscribe action"
+        },
+        "youtubeShortsUrl": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 300,
+          "description": "Daily YouTube Shorts or video URL for Question 5"
+        },
+        "iqPromptIntro": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "Immediate fade-in instruction shown above Question 5 video"
+        },
+        "iqPrompts": {
+          "type": "array",
+          "description": "Pool of 1 to 8 daily IQ reflection questions randomly selected for Question 5"
+        },
+        "questions": {
+          "type": "array",
+          "description": "4 daily BPO-related multiple-choice questions (2 marks each)"
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the HR admin who last updated the daily assessment"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update"
+        }
+      },
+      "required": [
+        "activeDate",
+        "welcomeTitle",
+        "tagline",
+        "channelUrl",
+        "youtubeShortsUrl",
+        "iqPromptIntro",
+        "iqPrompts",
+        "questions",
+        "updatedBy",
+        "updatedAt"
+      ]
+    },
+    "CandidateSubmission": {
+      "title": "CandidateSubmission",
+      "description": "Completed screening assessment and YouTube IQ response submitted by a walk-in or remote candidate.",
+      "type": "object",
+      "properties": {
+        "track": {
+          "type": "string",
+          "enum": ["Fresher", "Experienced"],
+          "description": "Candidate experience track"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80,
+          "description": "Candidate full name"
+        },
+        "mobile": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20,
+          "pattern": "^[0-9+\\-\\s]{8,20}$",
+          "description": "Candidate mobile phone number"
+        },
+        "email": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 120,
+          "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+          "description": "Candidate email ID"
+        },
+        "company": {
+          "type": "string",
+          "enum": [
+            "Firstsource",
+            "Star Health Insurance",
+            "Frankfinn",
+            "Altruist"
+          ],
+          "description": "Client company the candidate is applying for"
+        },
+        "experienceYears": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Optional experience duration for Experienced candidates"
+        },
+        "mcqAnswers": {
+          "type": "array",
+          "description": "Array of 4 selected option indices (0-3)"
+        },
+        "mcqScore": {
+          "type": "number",
+          "description": "Score from 4 BPO MCQs (0 to 8)"
+        },
+        "iqQuestion": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 240,
+          "description": "The random IQ reflection prompt shown to the candidate"
+        },
+        "iqResponse": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000,
+          "description": "Candidate written reflection/comment based on the YouTube Short"
+        },
+        "iqScore": {
+          "type": "number",
+          "description": "Score awarded for Question 5 video IQ task (0 to 2)"
+        },
+        "totalScore": {
+          "type": "number",
+          "description": "Total score out of 10"
+        },
+        "subscribedConfirmed": {
+          "type": "boolean",
+          "description": "Whether the candidate clicked through to subscribe on YouTube"
+        },
+        "assessmentDate": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Date of submission in YYYY-MM-DD format"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when submission was recorded"
+        }
+      },
+      "required": [
+        "track",
+        "fullName",
+        "mobile",
+        "email",
+        "company",
+        "experienceYears",
+        "mcqAnswers",
+        "mcqScore",
+        "iqQuestion",
+        "iqResponse",
+        "iqScore",
+        "totalScore",
+        "subscribedConfirmed",
+        "assessmentDate",
+        "createdAt"
+      ]
+    },
+    "SubmissionLock": {
+      "title": "SubmissionLock",
+      "description": "Zero-PII SHA-256 hashed duplicate submission lock keyed by date and hashed phone/email.",
+      "type": "object",
+      "properties": {
+        "assessmentDate": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Assessment date in YYYY-MM-DD format"
+        },
+        "submitted": {
+          "type": "boolean",
+          "description": "Always true when locked"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when lock was created"
+        }
+      },
+      "required": ["assessmentDate", "submitted", "createdAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized HR recruiter admin record.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["email", "role", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/dailyAssessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/DailyAssessment" },
+      "description": "Stores the active daily BPO assessment and YouTube Shorts configuration at document ID 'current'."
+    },
+    "/candidateSubmissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/CandidateSubmission" },
+      "description": "Stores completed candidate assessment submissions and PII, readable only by verified HR admins."
+    },
+    "/submissionLocks/{lockId}": {
+      "schema": { "$ref": "#/entities/SubmissionLock" },
+      "description": "Stores zero-PII hashed duplicate submission locks to prevent repeat attempts on the same date."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Stores authorized HR admin accounts."
+    }
+  }
+}
